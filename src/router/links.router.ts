@@ -1,5 +1,7 @@
 import { Router } from "express";
 import * as crypto from "crypto";
+import { nanoid } from "nanoid";
+import { setShortenedUrl } from "../controllers/shorten.js";
 
 const getRandomString = (): string => {
     return crypto.randomBytes(4).toString('hex');
@@ -12,14 +14,11 @@ linksRouter.get('/', (_req, res) => {
         {
             "message": "Hello World!",
             "randomString": getRandomString(),
+            "nanoid": nanoid(8),
         }
     );
 });
 
-linksRouter.post('/create', (req, res) => {
-    const { url } = req.body;
-    // Logic to create a lin
-    res.send(`Create link: ${url} with random string ${getRandomString()}`);
-});
+linksRouter.post('/', setShortenedUrl);
 
 export default linksRouter;
