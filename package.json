@@ -1,0 +1,31 @@
+{
+  "name": "shorterlink",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "dev": "tsx watch index.ts",
+    "lint": "eslint . --ext .ts .",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/express": "5.0.3",
+    "@types/node": "^24.2.0",
+    "@typescript-eslint/eslint-plugin": "8.39.0",
+    "@typescript-eslint/parser": "8.39.0",
+    "eslint": "9.32.0",
+    "ts-node-dev": "2.0.0",
+    "typescript": "5.9.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "tsx": "^4.20.3"
+  },
+  "type": "module"
+}
