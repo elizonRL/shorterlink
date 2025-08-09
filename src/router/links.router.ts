@@ -1,15 +1,11 @@
 import { Router } from "express";
-import { setShortenedUrl } from "../controllers/shorten.js";
+import { setShortenedUrl, getShortenedUrl, getAll } from "../controllers/shorten.js";
+
 
 const linksRouter = Router();
 
-linksRouter.get('/', (_req, res) => {
-    res.json(
-        {
-            message: "Welcome to the URL Shortener API",
-        }
-    );
-});
+linksRouter.get('/:shortUrlCode', getShortenedUrl);
+linksRouter.get('/', getAll);
 
 linksRouter.post('/', setShortenedUrl);
 
