@@ -1,4 +1,6 @@
 import express from 'express';
+import mongoose from 'mongoose';
+import config from './utils/config.js';
 import linksRouter from './router/links.router.js';
 import { logger, unknownEndpoint } from './utils/middleware.js';
 
@@ -20,3 +22,7 @@ app.use('/api', linksRouter); //-> handles all routes starting with /api
 app.use(unknownEndpoint); //-> handles requests to unknown endpoints
 
 export default app;
+
+/*
+MONGO_INITDB_ROOT_USERNAME=shortlink -e MONGO_INITDB_ROOT_PASSWORD=elizonlink -e MONGO_INITDB_DATABASE=mydb 
+*/
