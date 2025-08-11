@@ -1,6 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import config from './utils/config.js';
 import linksRouter from './router/links.router.js';
 import { logger, unknownEndpoint } from './utils/middleware.js';
 
