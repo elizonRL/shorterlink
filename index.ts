@@ -2,13 +2,13 @@
 import config from './src/utils/config.js';
 import app from './src/app.js';
 const port = config.PORT;
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 // Connect to MongoDB
-
+ 
 mongoose.connect(config.MONGODB_URI!)
   .then(() => {
-    console.log('connected to MongoDB');
+    console.log('Database connected successfully');
   })
   .catch((error) => {
     console.log('error connecting to MongoDB:', error.message);
