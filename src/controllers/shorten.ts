@@ -36,8 +36,6 @@ export const setShortenedUrl = (req:Request, res:Response) => {
 
 export const getShortenedUrl = (req: Request, res: Response) => {
     const {shortUrlCode}  = req.params;
-    console.log("shortUrlCode", shortUrlCode);
-    console.log(req.params.shortUrlCode);
     if (!shortUrlCode) {
         return res.status(400).json({ error: "Short URL code is required" });
     }
@@ -56,7 +54,7 @@ export const getShortenedUrl = (req: Request, res: Response) => {
 }
 export const getAll = (_req: Request, res: Response) => {
     LinksModels.find({}).then((links)=>{
-        return res.json(
+        return res.status(200).json(
             links
         );
     }).catch((err)=>{
