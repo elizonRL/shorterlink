@@ -10,6 +10,6 @@ export const inicialLinks = [
      },
 ];
 export const linksInDb = async () => {
-   const links = await Links.find({})
+   const links = await Links.find({}).exec()
     return links.map(link => link.toJSON());
 }

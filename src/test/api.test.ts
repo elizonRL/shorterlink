@@ -45,7 +45,12 @@ describe('GET /api/', () => {
      assert.strictEqual(response.body.originalUrl, newLink.originalUrl)
     });
     test('should be get all links', async ()=>{
+        const response = await request.get('/api')
+        .expect(200)
 
+        const linkDb = await linksInDb()
+
+       assert.strictEqual(response.body.length, linkDb.length)
     });
     
 });
