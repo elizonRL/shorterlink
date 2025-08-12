@@ -5,7 +5,7 @@ import LinksModels from "../models/linsk.models.js";
 
 let links: Links[] = [];
 
-export const setShortenedUrl = (req:Request, res:Response) => {
+export const setShortenedUrl = async (req:Request, res:Response) => {
     const { originalUrl } = req.body;
     
     if (!originalUrl) {
@@ -26,7 +26,7 @@ export const setShortenedUrl = (req:Request, res:Response) => {
             originalUrl: originalUrl,
             shortUrl: shortUrlCode,
         });
-        newLink.save();
+       await newLink.save();
         return res.status(201).json(link);
     }catch(err){
         return res.status(500).json({ error: "Internal Server Error" });

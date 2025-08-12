@@ -3,7 +3,7 @@ import assert from 'node:assert';
 import { describe, test, beforeEach, after } from 'node:test';
 import mongoose from 'mongoose';
 import LinksModels from '../models/linsk.models.js';
-/* import { inicialLinks } from '../utils/helper.js'; */
+import { inicialLinks, linksInDb } from '../utils/helper.js';
 
 import app from '../app.js';
 
@@ -15,16 +15,15 @@ beforeEach(async () => {
     // Clear the database before each test
     await LinksModels.deleteMany({});
     // Insert test data
-   /* let newLink = new LinksModels({
-        originalUrl: inicialLinks[0]!.originalUrl,
-    });
+   let newLink = new LinksModels(inicialLinks[0]!);
     await newLink.save();
-    newLink = new LinksModels({
-        originalUrl: inicialLinks[1]!.originalUrl,
-    });
-    await newLink.save(); */
+    newLink = new LinksModels(inicialLinks[1]!);
+    await newLink.save();
     
 });
+const newLink = {
+    originalUrl: 'https://new-example.com'
+}
 describe('GET /api/', () => {
     
     test('should return status 200 ', async () => {
@@ -37,6 +36,16 @@ describe('GET /api/', () => {
         const response = await request.get('/api');
 
         assert.strictEqual(Array.isArray(response.body), true);
+    });
+    test('should return one more links', async () => {
+        const response = await request.post('/api')
+        .send(newLink)
+        .expect(201);
+
+     assert.strictEqual(response.body.originalUrl, newLink.originalUrl)
+    });
+    test('should be get all links', async ()=>{
+
     });
     
 });
