@@ -31,6 +31,3 @@ app.use(unknownEndpoint); //-> handles requests to unknown endpoints
 
 export default app;
 
-/*
-MONGO_INITDB_ROOT_USERNAME=shortlink -e MONGO_INITDB_ROOT_PASSWORD=elizonlink -e MONGO_INITDB_DATABASE=mydb 
-*/
