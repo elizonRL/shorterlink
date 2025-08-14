@@ -6,7 +6,7 @@
     "tsc": "tsc",
     "dev": "cross-env NODE_ENV=development tsx watch index.ts",
     "lint": "eslint . --ext .ts .",
-    "start": "cross-env NODE_ENV=productio node dist/index.js",
+    "start": "cross-env NODE_ENV=production node dist/index.js",
     "test": "cross-env NODE_ENV=test tsx --test"
   },
   "keywords": [],

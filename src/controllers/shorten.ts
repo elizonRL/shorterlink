@@ -3,7 +3,6 @@ import { nanoid } from "nanoid";
 import type {  Links, shortUrlCode } from "../interface.ts";
 import LinksModels from "../models/linsk.models.js";
 
-let links: Links[] = [];
 
 export const setShortenedUrl = async (req:Request, res:Response) => {
     const { originalUrl } = req.body;
@@ -21,7 +20,6 @@ export const setShortenedUrl = async (req:Request, res:Response) => {
             originalUrl: originalUrl,
             shortUrlCode: shortUrlCode,
         };
-        links.push(link);
         const newLink = new LinksModels({
             originalUrl: originalUrl,
             shortUrl: shortUrlCode,

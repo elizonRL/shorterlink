@@ -15,17 +15,17 @@ beforeEach(async () => {
     // Clear the database before each test
     await LinksModels.deleteMany({});
     // Insert test data
-   let newLink = new LinksModels(inicialLinks[0]!);
+    let newLink = new LinksModels(inicialLinks[0]!);
     await newLink.save();
     newLink = new LinksModels(inicialLinks[1]!);
     await newLink.save();
-    
+
 });
 const newLink = {
     originalUrl: 'https://new-example.com'
 }
-describe('GET /api/', () => {
-    
+describe('Suite de test de la apishorter link ', () => {
+
     test('should return status 200 ', async () => {
         const response = await request.get('/api');
 
@@ -39,22 +39,37 @@ describe('GET /api/', () => {
     });
     test('should return one more links', async () => {
         const response = await request.post('/api')
-        .send(newLink)
-        .expect(201);
+            .send(newLink)
+            .expect(201);
 
-     assert.strictEqual(response.body.originalUrl, newLink.originalUrl)
+        assert.strictEqual(response.body.originalUrl, newLink.originalUrl)
     });
-    test('should be get all links', async ()=>{
+    test('should be get all links', async () => {
         const response = await request.get('/api')
-        .expect(200)
+            .expect(200)
 
         const linkDb = await linksInDb()
 
-       assert.strictEqual(response.body.length, linkDb.length)
+        assert.strictEqual(response.body.length, linkDb.length)
     });
-    
+    test('should redirect when accessing a short URL', async () => {
+        // First create a new link to get a shortUrl
+        const createResponse = await request.post('/api')
+            .send(newLink)
+            .expect(201);
+
+        const shortUrl = createResponse.body.shortUrlCode;
+
+
+        // Test the redirect
+        const response = await request.get(`/api/${shortUrl}`)
+            .expect(302); // 302 is redirect status code
+
+        assert.strictEqual(response.header.location, newLink.originalUrl);
+    });
+
 });
 after(async () => {
     // Clear the database after each test
-    await mongoose.connection.close();
+    mongoose.connection.close();
 });

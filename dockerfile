@@ -14,7 +14,8 @@ COPY . .
 # Build the TypeScript code
 RUN npm run tsc
 # env 
-ENV NODE_ENV production
+ENV NODE_ENV=production
+ENV MONGODB_URI_PROD=mongodb://shortlink:elizonlink@mongolink:27017/mydatabase_prod?authSource=admin
 
 # Expose the application port
 EXPOSE 3000
