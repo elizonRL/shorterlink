@@ -1,13 +1,11 @@
 import express from 'express';
 import linksRouter from './router/links.router.js';
-import { logger, unknownEndpoint } from './utils/middleware.js';
+import { handelError, logger, unknownEndpoint } from './utils/middleware.js';
 import mongoose from 'mongoose'; 
 import config from './utils/config.js';
-import cors from 'cors';
 
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 // Connect to MongoDB
 mongoose.connect(config.MONGODB_URI!)
@@ -16,6 +14,7 @@ mongoose.connect(config.MONGODB_URI!)
   })
   .catch((error) => {
     console.log('error connecting to MongoDB:', error.message);
+    
   });
 
 // Middleware LOGGER 
@@ -30,6 +29,7 @@ app.use('/api', linksRouter); //-> handles all routes starting with /api
 
 // Middleware UNKNOWN ENDPOINT
 app.use(unknownEndpoint); //-> handles requests to unknown endpoints
+app.use(handelError); // -> handle middleware of errors
 
 export default app;
 
