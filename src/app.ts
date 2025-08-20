@@ -1,5 +1,6 @@
 import express from 'express';
 import linksRouter from './router/links.router.js';
+import userRouter from './router/user.router.js';
 import { logger, unknownEndpoint } from './utils/middleware.js';
 import mongoose from 'mongoose'; 
 import config from './utils/config.js';
@@ -27,7 +28,7 @@ app.get('/', (_req, res) => {
 
 // Router LINKS
 app.use('/api', linksRouter); //-> handles all routes starting with /api
-
+app.use('/api/users', userRouter); //-> handles all routes starting with /api/users
 // Middleware UNKNOWN ENDPOINT
 app.use(unknownEndpoint); //-> handles requests to unknown endpoints
 

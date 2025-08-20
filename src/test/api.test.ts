@@ -62,7 +62,7 @@ describe('Suite de test de la apishorter link ', () => {
 
 
         // Test the redirect
-        const response = await request.get(`/api/${shortUrl}`)
+        const response = await request.get(`/api/short/${shortUrl}`)
             .expect(302); // 302 is redirect status code
 
         assert.strictEqual(response.header.location, newLink.originalUrl);
