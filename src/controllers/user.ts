@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import User from '../models/user.models.js'; 
+import { hashPassword } from '../utils/crypto.js';
 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -17,12 +18,24 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { email, username, passwordHash } = req.body;
+        const { email, username, password } = req.body;
+        const passwordHash = await hashPassword(password);
+        console.log('Hashed password:', passwordHash);
         const newUser = new User({ email, username, passwordHash });
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);
     } catch (error) {
         console.error('Error creating user:', error);
+        next(error);
+    }
+}
+
+export const getAllUsers = async (_req: Request, res: Response, next: NextFunction) => {
+    try {
+        const users = await User.find().populate('links'); 
+        res.status(200).json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
         next(error);
     }
 }
