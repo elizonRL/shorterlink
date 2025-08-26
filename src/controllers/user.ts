@@ -4,9 +4,11 @@ import { hashPassword } from '../utils/crypto.js';
 import type { User as UserInterface } from '../interface.js';
 import { comparePassword } from '../utils/crypto.js';
 
+/* get userName and return the objet to data base*/
 const getUserByName = async (username: string): Promise<UserInterface | null> => {
     return await User.findOne({ username });
 }
+
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req.params.id;
