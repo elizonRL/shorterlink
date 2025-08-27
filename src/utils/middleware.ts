@@ -15,3 +15,17 @@ export const unknownEndpoint = (_req: Request, res: Response) => {
     res.status(404).send('unknown endpoint');
     */
 }
+
+export const errorHandler = (error: Error, _req: Request, res: Response, next: NextFunction) => {
+    console.error('error Name->',error.message);
+  
+    if (error.name === 'CastError') {
+      return res.status(400).send({ error: 'malformatted id' });
+    } else if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: error.message });
+    }else if(error.name === 'MongoServerError'){
+        return res.status(400).send({error: `Username already exists`})
+    }
+  
+    next(error);
+}

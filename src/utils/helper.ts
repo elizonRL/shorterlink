@@ -9,6 +9,13 @@ export const inicialLinks = [
         shortUrl: nanoid(8)
      },
 ];
+
+export const newUser = {
+    username: 'testuser',
+    email: 'test@test.com',
+    password: 'testpassword'
+}
+
 export const linksInDb = async () => {
    const links = await Links.find({}).exec()
     return links.map(link => link.toJSON());

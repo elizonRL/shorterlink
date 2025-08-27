@@ -31,7 +31,6 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);
     } catch (error) {
-        console.error('Error creating user:', error);
         next(error);
     }
 }
@@ -41,7 +40,6 @@ export const getAllUsers = async (_req: Request, res: Response, next: NextFuncti
         const users = await User.find().populate('links');
         res.status(200).json(users);
     } catch (error) {
-        console.error('Error fetching users:', error);
         next(error);
     }
 }
