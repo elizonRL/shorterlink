@@ -33,6 +33,30 @@ describe('User API tests', () => {
 
         assert.strictEqual(response.body.error, 'Username already exists');
     });
+    test('should login an existing user', async () => {
+        await request.post('/api/users')
+            .send(newUser)
+            .expect(201);
+
+        const response = await request.post('/api/users/login')
+            .send({ username: newUser.username, password: newUser.password })
+            .expect(200);
+
+        assert.strictEqual(response.body.message, 'Login successful');
+        assert.strictEqual(response.body.user.username, newUser.username);
+    });
+
+    test('should not login with incorrect password', async () => {
+        await request.post('/api/users')
+            .send(newUser)
+            .expect(201);
+
+        const response = await request.post('/api/users/login')
+            .send({ username: newUser.username, password: 'wrongpassword' })
+            .expect(401);
+
+        assert.strictEqual(response.body.error, 'Invalid username or password');
+    });
 });
 after(async () => {
     // Clear the database after each test
