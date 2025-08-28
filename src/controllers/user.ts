@@ -3,7 +3,10 @@ import User from '../models/user.models.js';
 import { hashPassword } from '../utils/crypto.js';
 import type { User as UserInterface } from '../interface.js';
 import { comparePassword } from '../utils/crypto.js';
+import config from '../utils/config.js';
+import jwt from 'jsonwebtoken';
 
+const secret = config.JWT_SECRET
 /* get userName and return the objet to data base*/
 const getUserByName = async (username: string): Promise<UserInterface | null> => {
     return await User.findOne({ username });
@@ -55,10 +58,13 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
-        res.status(200).json({ message: 'Login successful', user });
+        if (!secret) {
+            return res.status(500).json({ error: 'Server configuration error' });
+        }
+        const token = jwt.sign({id: user.id, username: user.username }, secret, { expiresIn: '1h' });
+        res.status(200).json({ message: 'Login successful', user, token });
     } catch (error) {
         console.error('Error during login:', error);
         next(error);
     }
-    
 }

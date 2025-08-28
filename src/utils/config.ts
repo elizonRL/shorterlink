@@ -5,7 +5,8 @@ const saltRounds = parseInt(process.env.SALT_ROUNDS!);
 const config = {
     PORT: process.env.PORT,
     MONGODB_URI: process.env.MONGODB_URI,
-    SALT_ROUNDS: saltRounds
+    SALT_ROUNDS: saltRounds,
+    JWT_SECRET: process.env.JWT_SECRET
 }
 if (process.env.NODE_ENV === 'test') {
     config.MONGODB_URI = process.env.MONGODB_URI_TEST

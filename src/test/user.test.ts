@@ -21,7 +21,6 @@ describe('User API tests', () => {
 
         assert.strictEqual(response.body.username, newUser.username);
     });
-
     test('should not create a user with an existing username', async () => {
         await request.post('/api/users')
             .send(newUser)
@@ -45,7 +44,6 @@ describe('User API tests', () => {
         assert.strictEqual(response.body.message, 'Login successful');
         assert.strictEqual(response.body.user.username, newUser.username);
     });
-
     test('should not login with incorrect password', async () => {
         await request.post('/api/users')
             .send(newUser)
@@ -55,6 +53,12 @@ describe('User API tests', () => {
             .send({ username: newUser.username, password: 'wrongpassword' })
             .expect(401);
 
+        assert.strictEqual(response.body.error, 'Invalid username or password');
+    });
+    test('should not login a non-existing user', async () => {
+        const response = await request.post('/api/users/login')
+            .send({ username: 'nonexistent', password: 'password' })
+            .expect(401);
         assert.strictEqual(response.body.error, 'Invalid username or password');
     });
 });
