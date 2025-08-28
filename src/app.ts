@@ -1,15 +1,18 @@
 import express from 'express';
 import linksRouter from './router/links.router.js';
 import userRouter from './router/user.router.js';
-import { logger, unknownEndpoint, errorHandler } from './utils/middleware.js';
+import { logger, unknownEndpoint, errorHandler, init, authenticateJwt } from './utils/middleware.js';
 import mongoose from 'mongoose'; 
 import config from './utils/config.js';
 import cors from 'cors';
 
 
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+init();
+app.use(authenticateJwt);
 // Connect to MongoDB
 mongoose.connect(config.MONGODB_URI!)
   .then(() => {

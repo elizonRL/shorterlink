@@ -1,5 +1,8 @@
 
 import type { Request, Response, NextFunction } from 'express'; // Import types from express
+import passport from 'passport';
+import {Strategy as jwtstrategy, ExtractJwt} from 'passport-jwt'; // Import passport-jwt for JWT strategy
+import config from './config.js';
 // Middleware to log requests
 export const logger = (req: Request, _res: Response, next: NextFunction) => {
     console.log(`${req.method} ${req.url} - ${new Date().toISOString()}`);
@@ -28,4 +31,24 @@ export const errorHandler = (error: Error, _req: Request, res: Response, next: N
     }
   
     next(error);
+}
+
+export const init = () => {
+  const secret = config.JWT_SECRET;
+  if (!secret) 
+    throw new Error('JWT_SECRET is not defined');
+  const opts = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
+    secretOrKey: secret
+  }
+  passport.use(new jwtstrategy(opts, (decode, done) => {
+    console.log('Decoded JWT:', decode);
+    return done(null, decode)
+  }));
+}
+export const authenticateJwt = (req: Request, res: Response, next: NextFunction) => {
+  if(req.path === '/' || req.path.startsWith('/api/users') ){
+    return next();
+  }
+  return passport.authenticate('jwt', {session: false})(req, res, next);
 }

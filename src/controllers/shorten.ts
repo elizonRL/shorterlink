@@ -50,7 +50,10 @@ export const getShortenedUrl = (req: Request, res: Response) => {
     // This is a placeholder as the actual retrieval logic would depend on your data storage solution.
     
 }
-export const getAll = (_req: Request, res: Response) => {
+export const getAll = (req: Request, res: Response) => {
+    if (!req.user) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
     LinksModels.find({}).then((links)=>{
         return res.status(200).json(
             links
