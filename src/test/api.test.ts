@@ -24,28 +24,45 @@ beforeEach(async () => {
 const newLink = {
     originalUrl: 'https://new-example.com'
 }
+let token = '';
 describe('Suite de test de la apishorter link ', () => {
+    test('get token', async () => {
+        const response = await request.post('/api/users')
+            .send({ username: 'testuser', password: 'testpassword', email: 'test@test2.com'});
+
+        assert.strictEqual(response.status, 201);
+
+        const loginResponse = await request.post('/api/users/login')
+            .send({ username: 'testuser', password: 'testpassword' });
+            token = loginResponse.body.token;
+        assert.strictEqual(loginResponse.status, 200);
+        assert.ok(loginResponse.body.token); // Check that token is present
+    });
 
     test('should return status 200 ', async () => {
-        const response = await request.get('/api');
+        const response = await request.get('/api')
+        .set('Authorization', `Bearer ${token}`);
 
         assert.strictEqual(response.status, 200);
     });
 
     test('should return an array of links', async () => {
-        const response = await request.get('/api');
+        const response = await request.get('/api')
+        .set('Authorization', `Bearer ${token}`);
 
         assert.strictEqual(Array.isArray(response.body), true);
     });
     test('should return one more links', async () => {
         const response = await request.post('/api')
             .send(newLink)
+            .set('Authorization', `Bearer ${token}`)
             .expect(201);
 
         assert.strictEqual(response.body.originalUrl, newLink.originalUrl)
     });
     test('should be get all links', async () => {
         const response = await request.get('/api')
+        .set('Authorization', `Bearer ${token}`)
             .expect(200)
 
         const linkDb = await linksInDb()
@@ -55,6 +72,7 @@ describe('Suite de test de la apishorter link ', () => {
     test('should redirect when accessing a short URL', async () => {
         // First create a new link to get a shortUrl
         const createResponse = await request.post('/api')
+            .set('Authorization', `Bearer ${token}`)
             .send(newLink)
             .expect(201);
 
@@ -63,6 +81,7 @@ describe('Suite de test de la apishorter link ', () => {
 
         // Test the redirect
         const response = await request.get(`/api/short/${shortUrl}`)
+            .set('Authorization', `Bearer ${token}`)
             .expect(302); // 302 is redirect status code
 
         assert.strictEqual(response.header.location, newLink.originalUrl);
