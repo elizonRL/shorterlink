@@ -28,7 +28,7 @@ let token = '';
 describe('Suite de test de la apishorter link ', () => {
     test('get token', async () => {
         const response = await request.post('/api/users')
-            .send({ username: 'testuser', password: 'testpassword', email: 'test@test2.com'});
+            .send({ username: 'testuser2', password: 'testpassword', email: 'test@test2.com'});
 
         assert.strictEqual(response.status, 201);
 
