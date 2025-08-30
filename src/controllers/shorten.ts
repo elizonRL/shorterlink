@@ -2,11 +2,14 @@ import type { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import type {  Links, shortUrlCode } from "../interface.ts";
 import LinksModels from "../models/linsk.models.js";
+import { getUserByName } from "./user.js";
 
 
 export const setShortenedUrl = async (req:Request, res:Response) => {
     const { originalUrl } = req.body;
-    
+    const  userName  = req.user.userName;
+    const user = await getUserByName(userName);
+    console.log("User from token:", userName, user);
     if (!originalUrl) {
         return res.status(400).json({ error: "URL is required" });
     }
@@ -25,7 +28,9 @@ export const setShortenedUrl = async (req:Request, res:Response) => {
             shortUrl: shortUrlCode,
         });
        await newLink.save();
+
         return res.status(201).json(link);
+        
     }catch(err){
         return res.status(500).json({ error: "Internal Server Error" });
     }

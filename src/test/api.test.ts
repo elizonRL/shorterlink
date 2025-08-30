@@ -6,14 +6,14 @@ import LinksModels from '../models/linsk.models.js';
 import { inicialLinks, linksInDb } from '../utils/helper.js';
 
 import app from '../app.js';
-
-
+import User from '../models/user.models.js';
 
 const request = supertest(app);
 
 beforeEach(async () => {
     // Clear the database before each test
     await LinksModels.deleteMany({});
+    await User.deleteMany({});
     // Insert test data
     let newLink = new LinksModels(inicialLinks[0]!);
     await newLink.save();
@@ -28,12 +28,12 @@ let token = '';
 describe('Suite de test de la apishorter link ', () => {
     test('get token', async () => {
         const response = await request.post('/api/users')
-            .send({ username: 'testuser2', password: 'testpassword', email: 'test@test2.com'});
+            .send({ userName: 'testuser2', password: 'testpassword', email: 'test@test2.com'});
 
         assert.strictEqual(response.status, 201);
 
         const loginResponse = await request.post('/api/users/login')
-            .send({ username: 'testuser', password: 'testpassword' });
+            .send({ userName: 'testuser2', password: 'testpassword' });
             token = loginResponse.body.token;
         assert.strictEqual(loginResponse.status, 200);
         assert.ok(loginResponse.body.token); // Check that token is present

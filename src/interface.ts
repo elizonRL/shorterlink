@@ -6,7 +6,7 @@ export interface Links  {
 export interface User {
     id?: string;
     email: string;
-    username: string;
+    userName: string;
     passwordHash: string;
     links: Links[];
 }

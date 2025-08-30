@@ -8,8 +8,8 @@ import jwt from 'jsonwebtoken';
 
 const secret = config.JWT_SECRET
 /* get userName and return the objet to data base*/
-const getUserByName = async (username: string): Promise<UserInterface | null> => {
-    return await User.findOne({ username });
+export const getUserByName = async (userName: string): Promise<UserInterface | null> => {
+    return await User.findOne({ userName });
 }
 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -28,9 +28,9 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { email, username, password } = req.body;
+        const { email, userName, password } = req.body;
         const passwordHash = await hashPassword(password);
-        const newUser = new User({ email, username, passwordHash });
+        const newUser = new User({ email, userName, passwordHash });
         const savedUser = await newUser.save();
         res.status(201).json(savedUser);
     } catch (error) {
@@ -49,8 +49,8 @@ export const getAllUsers = async (_req: Request, res: Response, next: NextFuncti
 
 export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { username, password } = req.body;
-        const user = await getUserByName(username);
+        const { userName, password } = req.body;
+        const user = await getUserByName(userName);
         if (!user) {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
@@ -61,7 +61,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
         if (!secret) {
             return res.status(500).json({ error: 'Server configuration error' });
         }
-        const token = jwt.sign({id: user.id, username: user.username }, secret, { expiresIn: '1h' });
+        const token = jwt.sign({userId: user.id, userName: user.userName }, secret, { expiresIn: '1h' });
         res.status(200).json({ message: 'Login successful', user, token });
     } catch (error) {
         console.error('Error during login:', error);

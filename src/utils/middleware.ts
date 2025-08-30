@@ -39,7 +39,6 @@ export const init = () => {
     secretOrKey: secret
   }
   passport.use(new jwtstrategy(opts, (decode, done) => {
-    console.log('Decoded JWT:', decode);
     return done(null, decode)
   }));
 }
