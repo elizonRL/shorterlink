@@ -36,7 +36,6 @@ export const setShortenedUrl = async (req:Request, res:Response) => {
            // Assuming user.links is an array of ObjectIds, not Links
            // Ensure user.links is an array of ObjectIds, not Links
            (user.links as unknown as Array<typeof newLink._id>) = [...(user.links as unknown as Array<typeof newLink._id>), newLink._id!];
-           console.log("New link added to user:", user);
            // Optionally, save the user if needed (e.g., await user.save();)
        }
 
