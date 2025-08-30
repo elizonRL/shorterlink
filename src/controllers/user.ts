@@ -6,9 +6,12 @@ import { comparePassword } from '../utils/crypto.js';
 import config from '../utils/config.js';
 import jwt from 'jsonwebtoken';
 
+
+
 const secret = config.JWT_SECRET
 /* get userName and return the objet to data base*/
 export const getUserByName = async (userName: string): Promise<UserInterface | null> => {
+
     return await User.findOne({ userName });
 }
 
@@ -61,7 +64,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
         if (!secret) {
             return res.status(500).json({ error: 'Server configuration error' });
         }
-        const token = jwt.sign({userId: user.id, userName: user.userName }, secret, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user.id, userName: user.userName }, secret, { expiresIn: '1h' });
         res.status(200).json({ message: 'Login successful', user, token });
     } catch (error) {
         console.error('Error during login:', error);

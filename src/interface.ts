@@ -1,4 +1,4 @@
-export interface Links  {
+export interface Links {
     originalUrl: string;
     shortUrlCode: shortUrlCode;
 }
@@ -11,4 +11,15 @@ export interface User {
     links: Links[];
 }
 
+import 'express'
+declare global {
+    namespace Express {
+        interface Request {
+            user?: {
+                userName: string,
+                id: string
+            };
+        }
+    }
+}
 export type shortUrlCode = string;

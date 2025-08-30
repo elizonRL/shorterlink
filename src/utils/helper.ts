@@ -11,7 +11,7 @@ export const inicialLinks = [
 ];
 
 export const newUser = {
-    username: 'testuser',
+    userName: 'testuser',
     email: 'test@test.com',
     password: 'testpassword'
 }

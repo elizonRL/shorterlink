@@ -7,9 +7,12 @@ import { getUserByName } from "./user.js";
 
 export const setShortenedUrl = async (req:Request, res:Response) => {
     const { originalUrl } = req.body;
-    const  userName  = req.user.userName;
-    const user = await getUserByName(userName);
-    console.log("User from token:", userName, user);
+    const  username  = req.user?.userName;
+    if (!username) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+    const user = await getUserByName(username);
+    console.log("User from token:", username, "el user->", user);
     if (!originalUrl) {
         return res.status(400).json({ error: "URL is required" });
     }
