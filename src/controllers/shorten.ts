@@ -8,12 +8,12 @@ import { getUserByName } from "./user.js";
 
 export const setShortenedUrl = async (req:Request, res:Response) => {
     const { originalUrl } = req.body;
-    const  userId = req.user?.userId;
-    if (!userId) {
+    const  userName = req.user?.userName;
+    if (!userName) {
         return res.status(401).json({ error: "Unauthorized" });
     }
-    const user = await getUserByName(req.user?.userName!);
-    console.log("User from token:", userId, "el user->", user);
+    const user = await getUserByName(userName);
+    console.log("User from token:", userName, "el user->", user);
     if (!originalUrl) {
         return res.status(400).json({ error: "URL is required" });
     }
@@ -32,9 +32,14 @@ export const setShortenedUrl = async (req:Request, res:Response) => {
             shortUrl: shortUrlCode,
         });
        await newLink.save();
-       const newUser = user?.links.push(newLink.id);
-       console.log("New link added to user:", newUser);
-       
+       if (user) {
+           // Assuming user.links is an array of ObjectIds, not Links
+           // Ensure user.links is an array of ObjectIds, not Links
+           (user.links as unknown as Array<typeof newLink._id>) = [...(user.links as unknown as Array<typeof newLink._id>), newLink._id!];
+           console.log("New link added to user:", user);
+           // Optionally, save the user if needed (e.g., await user.save();)
+       }
+
         return res.status(201).json(link);
         
     }catch(err){

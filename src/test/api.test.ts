@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import assert from 'node:assert';
-import { describe, test, beforeEach, after } from 'node:test';
+import { describe, test, before, after } from 'node:test';
 import mongoose from 'mongoose';
 import LinksModels from '../models/linsk.models.js';
 import { inicialLinks, linksInDb } from '../utils/helper.js';
@@ -10,7 +10,7 @@ import User from '../models/user.models.js';
 
 const request = supertest(app);
 
-beforeEach(async () => {
+before(async () => {
     // Clear the database before each test
     await User.deleteMany({});
     await LinksModels.deleteMany({});
