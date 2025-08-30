@@ -17,7 +17,7 @@ declare global {
         interface Request {
             user?: {
                 userName: string,
-                id: string
+                userId: string
             };
         }
     }

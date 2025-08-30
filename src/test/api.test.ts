@@ -12,8 +12,8 @@ const request = supertest(app);
 
 beforeEach(async () => {
     // Clear the database before each test
-    await LinksModels.deleteMany({});
     await User.deleteMany({});
+    await LinksModels.deleteMany({});
     // Insert test data
     let newLink = new LinksModels(inicialLinks[0]!);
     await newLink.save();

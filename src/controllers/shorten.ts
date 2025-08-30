@@ -5,14 +5,15 @@ import LinksModels from "../models/linsk.models.js";
 import { getUserByName } from "./user.js";
 
 
+
 export const setShortenedUrl = async (req:Request, res:Response) => {
     const { originalUrl } = req.body;
-    const  username  = req.user?.userName;
-    if (!username) {
+    const  userId = req.user?.userId;
+    if (!userId) {
         return res.status(401).json({ error: "Unauthorized" });
     }
-    const user = await getUserByName(username);
-    console.log("User from token:", username, "el user->", user);
+    const user = await getUserByName(req.user?.userName!);
+    console.log("User from token:", userId, "el user->", user);
     if (!originalUrl) {
         return res.status(400).json({ error: "URL is required" });
     }
@@ -31,7 +32,9 @@ export const setShortenedUrl = async (req:Request, res:Response) => {
             shortUrl: shortUrlCode,
         });
        await newLink.save();
-
+       const newUser = user?.links.push(newLink.id);
+       console.log("New link added to user:", newUser);
+       
         return res.status(201).json(link);
         
     }catch(err){
