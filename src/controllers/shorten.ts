@@ -3,17 +3,19 @@ import { nanoid } from "nanoid";
 import type {  Links, shortUrlCode } from "../interface.ts";
 import LinksModels from "../models/linsk.models.js";
 import { getUserByName } from "./user.js";
+import User from "../models/user.models.js";
 
 
 
 export const setShortenedUrl = async (req:Request, res:Response) => {
     const { originalUrl } = req.body;
     const  userName = req.user?.userName;
+    console.log("User from req.user:", userName, "el body->", req.user);
     if (!userName) {
         return res.status(401).json({ error: "Unauthorized" });
     }
-    const user = await getUserByName(userName);
-    console.log("User from token:", userName, "el user->", user);
+    const userdb = await getUserByName(userName);
+    
     if (!originalUrl) {
         return res.status(400).json({ error: "URL is required" });
     }
@@ -32,11 +34,10 @@ export const setShortenedUrl = async (req:Request, res:Response) => {
             shortUrl: shortUrlCode,
         });
        await newLink.save();
-       if (user) {
-           // Assuming user.links is an array of ObjectIds, not Links
-           // Ensure user.links is an array of ObjectIds, not Links
-           (user.links as unknown as Array<typeof newLink._id>) = [...(user.links as unknown as Array<typeof newLink._id>), newLink._id!];
-           // Optionally, save the user if needed (e.g., await user.save();)
+       if (userdb) {
+           await User.findByIdAndUpdate(userdb.id, {
+               $push: { links: newLink._id }
+           });
        }
 
         return res.status(201).json(link);

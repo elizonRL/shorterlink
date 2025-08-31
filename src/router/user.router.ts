@@ -7,5 +7,6 @@ const userRouter = Router();
 
 
 userRouter.post('/', createUser);
+/* userRouter.get('/', getAllUsers); // Assuming you have a getAllUsers controller */
 userRouter.post('/login', loginUser); // Assuming you have a login controller
 export default userRouter;
