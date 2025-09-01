@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { nanoid } from "nanoid";
-import type {  Links, shortUrlCode } from "../interface.ts";
+import type { shortUrlCode } from "../interface.ts";
 import LinksModels from "../models/linsk.models.js";
 import User from "../models/user.models.js";
 
