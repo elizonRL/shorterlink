@@ -43,6 +43,10 @@ export const setShortenedUrl = async (req:Request, res:Response) => {
 }
 
 export const getShortenedUrl = (req: Request, res: Response) => {
+    // Logic to handle redirection
+    /* Debo refactorizar este controlador -> este debe buscar el link en la base de datos y redirigir al usuario a la URL original
+    si no existe el link en la base de datos debe retornar un error 404, si existe debe redirigir al usuario a la URL original con un status 308 (redireccion permanente) 
+    */
     const {shortUrlCode}  = req.params;
     if (!shortUrlCode) {
         return res.status(400).json({ error: "Short URL code is required" });
