@@ -53,7 +53,6 @@ export const getShortenedUrl = (req: Request, res: Response) => {
         if(!link){
             return res.status(404).json({ error: "Short URL not found in DB" });
         }
-        console.log("Redirigiendo a: ", link.originalUrl);
         return res.status(308).redirect(link.originalUrl);
     }).catch((err)=>{
         return res.status(500).json({ error: "Internal Server Error" , details: err});
