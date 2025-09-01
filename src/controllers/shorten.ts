@@ -10,10 +10,11 @@ import User from "../models/user.models.js";
 export const setShortenedUrl = async (req:Request, res:Response) => {
     const { originalUrl } = req.body;
     const  userName = req.user?.userName;
-    console.log("User from req.user:", userName, "el body->", req.user);
+   
     if (!userName) {
         return res.status(401).json({ error: "Unauthorized" });
     }
+    //Este uruario no  tienen sentido que no exista esta busquedaa es in necesaria
     const userdb = await getUserByName(userName);
     
     if (!originalUrl) {
