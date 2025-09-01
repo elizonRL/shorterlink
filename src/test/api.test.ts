@@ -76,9 +76,8 @@ describe('Suite de test de la apishorter link ', () => {
             .send(newLink)
             .expect(201);
 
-        const shortUrl = createResponse.body.shortUrlCode;
-
-
+        const shortUrl = createResponse.body.shortUrl;
+        
         // Test the redirect
         const response = await request.get(`/api/short/${shortUrl}`)
             .set('Authorization', `Bearer ${token}`)

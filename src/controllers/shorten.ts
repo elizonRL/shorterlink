@@ -20,21 +20,17 @@ export const setShortenedUrl = async (req:Request, res:Response) => {
             return res.status(400).json({ error: "Invalid URL format" });
         }
         const shortUrlCode: shortUrlCode  = nanoid(8);
-        const link: Links = {
-            originalUrl: originalUrl,
-            shortUrlCode: shortUrlCode,
-        };
         const newLink = new LinksModels({
             originalUrl: originalUrl,
             shortUrl: shortUrlCode,
         });
        await newLink.save();
        
-         const userLink =  await User.findByIdAndUpdate(userId, {
+         await User.findByIdAndUpdate(userId, {
                $push: { links: newLink._id }
            });
 
-        return res.status(201).json({link, userLink});
+        return res.status(201).json(newLink);
         
     }catch(err){
         return res.status(500).json({ error: "Internal Server Error" });
@@ -48,6 +44,7 @@ export const getShortenedUrl = (req: Request, res: Response) => {
     si no existe el link en la base de datos debe retornar un error 404, si existe debe redirigir al usuario a la URL original con un status 308 (redireccion permanente) 
     */
     const {shortUrlCode}  = req.params;
+    
     if (!shortUrlCode) {
         return res.status(400).json({ error: "Short URL code is required" });
     }
@@ -56,6 +53,7 @@ export const getShortenedUrl = (req: Request, res: Response) => {
         if(!link){
             return res.status(404).json({ error: "Short URL not found in DB" });
         }
+        console.log("Redirigiendo a: ", link.originalUrl);
         return res.status(308).redirect(link.originalUrl);
     }).catch((err)=>{
         return res.status(500).json({ error: "Internal Server Error" , details: err});
