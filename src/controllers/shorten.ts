@@ -2,20 +2,14 @@ import type { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import type {  Links, shortUrlCode } from "../interface.ts";
 import LinksModels from "../models/linsk.models.js";
-import { getUserByName } from "./user.js";
 import User from "../models/user.models.js";
 
 
 
 export const setShortenedUrl = async (req:Request, res:Response) => {
     const { originalUrl } = req.body;
-    const  userName = req.user?.userName;
+    const  userId = req.user?.userId;
    
-    if (!userName) {
-        return res.status(401).json({ error: "Unauthorized" });
-    }
-    //Este uruario no  tienen sentido que no exista esta busquedaa es in necesaria
-    const userdb = await getUserByName(userName);
     
     if (!originalUrl) {
         return res.status(400).json({ error: "URL is required" });
@@ -35,13 +29,12 @@ export const setShortenedUrl = async (req:Request, res:Response) => {
             shortUrl: shortUrlCode,
         });
        await newLink.save();
-       if (userdb) {
-           await User.findByIdAndUpdate(userdb.id, {
+       
+         const userLink =  await User.findByIdAndUpdate(userId, {
                $push: { links: newLink._id }
            });
-       }
 
-        return res.status(201).json(link);
+        return res.status(201).json({link, userLink});
         
     }catch(err){
         return res.status(500).json({ error: "Internal Server Error" });
