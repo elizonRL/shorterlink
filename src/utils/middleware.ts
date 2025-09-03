@@ -7,9 +7,6 @@ import config from './config.js';
 export const logger = (req: Request, _res: Response, next: NextFunction) => {
     console.log(`${req.method} ${req.url} - ${new Date().toISOString()}`);
     next();
-    /* Alternatively, you can use:
-    console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
-    */  
 }
 // Middleware to handle unknown endpoints
 export const unknownEndpoint = (_req: Request, res: Response) => {
