@@ -67,9 +67,8 @@ export const getShortenedUrl = (req: Request, res: Response) => {
 }
 export const getAll = async (req: Request, res: Response) => {
     const userId = req.user?.userId;
-    const protocol = req.protocol;
-    const host = req.host;
-    console.log(`${protocol}://${host}`)
+    const url = `${req.protocol}://${req.host}`
+    console.log(url)
     let userLinks = await getUserLinks(userId);
     console.log(userLinks)
     if (!userLinks){
