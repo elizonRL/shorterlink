@@ -1,12 +1,15 @@
 import express from 'express';
 import linksRouter from './router/links.router.js';
-import { handelError, logger, unknownEndpoint } from './utils/middleware.js';
+import { logger, unknownEndpoint } from './utils/middleware.js';
 import mongoose from 'mongoose'; 
 import config from './utils/config.js';
+import cors from 'cors';
 
 
 const app = express();
 app.use(express.json());
+init();
+app.use(authenticateJwt);
 // Connect to MongoDB
 mongoose.connect(config.MONGODB_URI!)
   .then(() => {
@@ -26,10 +29,9 @@ app.get('/', (_req, res) => {
 
 // Router LINKS
 app.use('/api', linksRouter); //-> handles all routes starting with /api
-
+app.use('/api/users', userRouter); //-> handles all routes starting with /api/users
 // Middleware UNKNOWN ENDPOINT
 app.use(unknownEndpoint); //-> handles requests to unknown endpoints
-app.use(handelError); // -> handle middleware of errors
 
 export default app;
 
