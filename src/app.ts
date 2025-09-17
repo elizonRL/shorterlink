@@ -4,11 +4,14 @@ import userRouter from './router/user.router.js';
 import { logger, unknownEndpoint, errorHandler, init, authenticateJwt } from './utils/middleware.js';
 import mongoose from 'mongoose'; 
 import config from './utils/config.js';
+import cors from 'cors';
 
 
 
 const app = express();
+app.use(cors());
 app.use(express.json());
+app.use(logger);
 init();
 app.use(authenticateJwt);
 // Connect to MongoDB
@@ -19,10 +22,7 @@ mongoose.connect(config.MONGODB_URI!)
   .catch((error) => {
     console.log('error connecting to MongoDB:', error.message);
     
-  });
-
-// Middleware LOGGER 
-app.use(logger)//-> logs all requests to the console 
+  }); 
 
 app.get('/', (_req, res) => {
   res.send('Hello World!');

@@ -14,6 +14,9 @@ export const setShortenedUrl = async (req: Request, res: Response) => {
     const { originalUrl } = req.body;
     const userId = req.user?.userId;
 
+    if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
 
     if (!originalUrl) {
         return res.status(400).json({ error: "URL is required" });
@@ -30,9 +33,13 @@ export const setShortenedUrl = async (req: Request, res: Response) => {
         });
         await newLink.save();
 
-        await User.findByIdAndUpdate(userId, {
+        const updatedUser = await User.findByIdAndUpdate(userId, {
             $push: { links: newLink._id }
-        });
+        }, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ error: "User not found" });
+        }
 
         return res.status(201).json(newLink);
 
@@ -67,12 +74,21 @@ export const getShortenedUrl = (req: Request, res: Response) => {
 }
 export const getAll = async (req: Request, res: Response) => {
     const userId = req.user?.userId;
-    const url = `${req.protocol}://${req.host}`
-    console.log(url)
+    const baseUrl = `${req.protocol}://${req.host}/api/short`;
     let userLinks = await getUserLinks(userId);
-    console.log(userLinks)
-    if (!userLinks){
+    
+    if (!userLinks || userLinks.length === 0){
         return res.status(404).json({ error: "No links found for this user" });
-    };
-    return res.status(200).json(userLinks);
+    }
+    
+    const linksWithFullUrl = userLinks.map((link: any) => {
+        const linkObj = link.toObject();
+        return {
+            ...linkObj, 
+            id: linkObj._id.toString(),
+            shortUrl: `${baseUrl}/${linkObj.shortUrl}`
+        };
+    });
+    
+    return res.status(200).json(linksWithFullUrl);
 }

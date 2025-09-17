@@ -40,7 +40,7 @@ export const init = () => {
   }));
 }
 export const authenticateJwt = (req: Request, res: Response, next: NextFunction) => {
-  if(req.path === '/' || req.path.startsWith('/api/users')|| req.path.startsWith('/api/short')) {
+  if(req.method === 'OPTIONS' || req.path === '/' || req.path.startsWith('/api/users')|| req.path.startsWith('/api/short')) {
     return next();
   }
   return passport.authenticate('jwt', {session: false})(req, res, next);
