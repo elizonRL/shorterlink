@@ -1,0 +1,67 @@
+# Dependencies
+node_modules
+npm-debug.log
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist
+build
+out
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+logs
+
+# Testing
+coverage
+.nyc_output
+.coverage
+test-results
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+*.md
+docs
+
+# IDE/Editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.sublime-*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.yml
+docker-compose.*.yml
+.dockerignore
+Dockerfile.*
+
+# TypeScript
+*.tsbuildinfo
+tsconfig.json
+
+# ESLint
+.eslintrc
+.eslintrc.*
+.eslintignore
+
+# Temporary files
+tmp
+temp
+*.tmp
+*.temp

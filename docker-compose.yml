@@ -1,0 +1,36 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URI=mongodb://shortlink:elizonlink@mongoshort:27017/mydatabase_prod?authSource=admin
+      - JWT_SECRET=your-super-secret-jwt-key-change-this
+      - SALT_ROUNDS=10
+    depends_on:
+      - mongoshort
+    networks:
+      - shorterlink-network
+
+  mongoshort:
+    image: mongo:7
+    container_name: mongoshort
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=shortlink
+      - MONGO_INITDB_ROOT_PASSWORD=elizonlink
+      - MONGO_INITDB_DATABASE=mydatabase_prod
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - shorterlink-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  shorterlink-network:
+    driver: bridge
