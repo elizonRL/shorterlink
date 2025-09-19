@@ -72,6 +72,39 @@ export const getShortenedUrl = (req: Request, res: Response) => {
     // This is a placeholder as the actual retrieval logic would depend on your data storage solution.
 
 }
+export const deleteShortenedUrl = async (req: Request, res: Response) => {
+    const { shortUrlCode } = req.params;
+    const userId = req.user?.userId;
+
+    if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    if (!shortUrlCode) {
+        return res.status(400).json({ error: "Short URL code is required" });
+    }
+
+    try {
+        const link = await LinksModels.findOne({ shortUrl: shortUrlCode });
+        if (!link) {
+            return res.status(404).json({ error: "Short URL not found" });
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(userId, {
+            $pull: { links: link._id }
+        }, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        await LinksModels.findByIdAndDelete(link._id);
+
+        return res.status(200).json({ message: "Link deleted successfully" });
+    } catch (err) {
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
 export const getAll = async (req: Request, res: Response) => {
     const userId = req.user?.userId;
     const baseUrl = `${req.protocol}://${req.host}/api/short`;

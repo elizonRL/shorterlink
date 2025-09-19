@@ -9,7 +9,11 @@ import cors from 'cors';
 
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: '*', // Allow requests from any origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Allow these HTTP methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
+}));
 app.use(express.json());
 app.use(logger);
 init();
