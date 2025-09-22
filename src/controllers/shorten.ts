@@ -107,21 +107,11 @@ export const deleteShortenedUrl = async (req: Request, res: Response) => {
 }
 export const getAll = async (req: Request, res: Response) => {
     const userId = req.user?.userId;
-    const baseUrl = `${req.protocol}://${req.host}/api/short`;
     let userLinks = await getUserLinks(userId);
     
     if (!userLinks || userLinks.length === 0){
         return res.status(404).json({ error: "No links found for this user" });
     }
     
-    const linksWithFullUrl = userLinks.map((link: any) => {
-        const linkObj = link.toObject();
-        return {
-            ...linkObj, 
-            id: linkObj._id.toString(),
-            shortUrl: `${baseUrl}/${linkObj.shortUrl}`
-        };
-    });
-    
-    return res.status(200).json(linksWithFullUrl);
+    return res.status(200).json(userLinks);
 }

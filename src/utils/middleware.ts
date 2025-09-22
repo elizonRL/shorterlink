@@ -40,8 +40,19 @@ export const init = () => {
   }));
 }
 export const authenticateJwt = (req: Request, res: Response, next: NextFunction) => {
-  if(req.method === 'OPTIONS' || req.path === '/' || req.path.startsWith('/api/users')|| req.path.startsWith('/api/short')) {
+  const publicPaths = [
+    '/',
+    '/api/users',
+    '/api/short',
+    '/assets/'
+  ];
+  
+  const isPublicPath = req.method === 'OPTIONS' || 
+    publicPaths.some(path => req.path === path || req.path.startsWith(path));
+  
+  if (isPublicPath) {
     return next();
   }
-  return passport.authenticate('jwt', {session: false})(req, res, next);
+  
+  return passport.authenticate('jwt', { session: false })(req, res, next);
 }

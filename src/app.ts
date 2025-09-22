@@ -5,17 +5,26 @@ import { logger, unknownEndpoint, errorHandler, init, authenticateJwt } from './
 import mongoose from 'mongoose'; 
 import config from './utils/config.js';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 
 const app = express();
 app.use(cors({
-  origin: '*', // Allow requests from any origin
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Allow these HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.json());
 app.use(logger);
+
+// Serve static files
+app.use(express.static(path.join(__dirname, '../dist')));
+
 init();
 app.use(authenticateJwt);
 // Connect to MongoDB
@@ -26,19 +35,20 @@ mongoose.connect(config.MONGODB_URI!)
   .catch((error) => {
     console.log('error connecting to MongoDB:', error.message);
     
-  }); 
+  });
 
 app.get('/', (_req, res) => {
-  res.send('Hello World!');
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 // Router LINKS
-app.use('/api', linksRouter); //-> handles all routes starting with /api
-app.use('/api/users', userRouter); //-> handles all routes starting with /api/users
+app.use('/api', linksRouter);
+app.use('/api/users', userRouter);
+
 // Middleware UNKNOWN ENDPOINT
-app.use(unknownEndpoint); //-> handles requests to unknown endpoints
+app.use(unknownEndpoint);
 // Middleware ERROR HANDLER
-app.use(errorHandler); //-> handles errors
+app.use(errorHandler);
 
 export default app;
 
